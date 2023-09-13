@@ -108,15 +108,9 @@ function add_role() {
         ])
         .then((data) => {
             // check if department id is valid
-            // if (typeof salary != 'number')
-            console.log(data);
-            let result = {
-                title: data.role,
-                salary: data.salary,
-                department_id: data.department_id
-            }
-            db.query('INSERT INTO roles (title, salary, department_id) VALUES (?,?,?);',result,   (err, results) => {
-                console.log(results);
+            // if (typeof salary != 'number')            
+            db.query('INSERT INTO roles (title, salary, department_id) VALUES (?,?,?);', [data.role, data.salary, data.dept_id], (err, results) => {
+                console.log('role added');
             });
             view_roles();
         });
@@ -148,16 +142,15 @@ function add_employee() {
         ])
         .then((data) => {
             // check if inputed data is valid
-            db.query(`INSERT INTO roles (first_name, last_name, role_id, manager_id) VALUES ('${data.first}', '${data.last}', '${data.role}', '${data.manager}');`, (err, result) => {
-                console.log(result);
+            db.query('INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?);',[data.first, data.last, data.role, data.manager], (err, result) => {
+                console.log('employee added');
             });
-
+            view_employ();
         });
 };
 
 // change an employee role only
 function update_employee() {
-    // prompt for emp id and new role
     inquirer
     .prompt([
         {
@@ -172,9 +165,10 @@ function update_employee() {
         }
     ])
     .then((data) => {
-        db.query('UPDATE employees SET role_id TO ? WHERE id = ?;',data.role, data.empID, (err, result) => {
-            console.log(result);
+        db.query('UPDATE employees SET role_id=? WHERE id=?;',[data.role, data.empID], (err, result) => {
+            console.log('employee updated');
         });
+        view_employ();
     });
 
 }
